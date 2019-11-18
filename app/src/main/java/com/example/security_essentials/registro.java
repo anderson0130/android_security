@@ -7,18 +7,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
-static int clave;
+public class registro extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registro);
 
-        Button boton_registro = (Button) findViewById(R.id.registar);
-        boton_registro.setOnClickListener(new View.OnClickListener() {
+        Button atras = (Button) findViewById(R.id.atras);
+        atras.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)  {
-                Intent cambio = new Intent(MainActivity.this, registro.class);
+                Intent cambio = new Intent(registro.this, MainActivity.class);
                 startActivity(cambio);
             }
         });
