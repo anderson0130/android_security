@@ -43,6 +43,7 @@ public class MenuInicioActivity extends AppCompatActivity implements GoogleApiCl
         setContentView(R.layout.activity_menu_inicio);
         auth = FirebaseAuth.getInstance();
         textViewLocacion = findViewById(R.id.textViewLocacion);
+        locationRequest = new LocationRequest();
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addConnectionCallbacks(this)

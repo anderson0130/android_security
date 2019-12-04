@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -38,6 +40,8 @@ public class RegistroActivity extends AppCompatActivity {
     TextView correo;
     FirebaseAuth mAuth;
     private static final String TAG = "MostrarMensajeRA";
+    private FirebaseDatabase baseDatos;
+    private DatabaseReference miRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,9 @@ public class RegistroActivity extends AppCompatActivity {
         correo = findViewById(R.id.correo);
         clave1 = findViewById(R.id.contrasenia1);
         clave2 = findViewById(R.id.contrasenia2);
+
+        baseDatos = FirebaseDatabase.getInstance();
+        miRef = baseDatos.getReference();
 
         Button registrar = (Button)findViewById(R.id.registro);
         registrar.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +107,8 @@ public class RegistroActivity extends AppCompatActivity {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success");
                     FirebaseUser user = mAuth.getCurrentUser();
+                    Usuario usuario = new Usuario(user.getUid(), user.getEmail());
+                    miRef.child("users").child(user.getUid()).setValue(usuario);
                     Toast.makeText(RegistroActivity.this, "Registro exitoso.", Toast.LENGTH_SHORT).show();
                     mostrarMenuInicio();
 
