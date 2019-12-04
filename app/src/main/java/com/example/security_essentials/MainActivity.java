@@ -3,7 +3,9 @@ package com.example.security_essentials;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -59,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
             mostrarMenuInicio();
         }
     }
+    private void guardarUsuarioSharedP(Usuario usuario){
+        SharedPreferences prefs = getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("email", usuario.email);
+        editor.putString("uid", usuario.uid);
+        editor.commit();
+    }
 
     private void mostrarMenuInicio(){
         startActivity(new Intent(this, MenuInicioActivity.class));
@@ -73,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success");
                     FirebaseUser user = mAuth.getCurrentUser();
+                    Usuario usuario = new Usuario(user.getUid(), user.getEmail());
+                    guardarUsuarioSharedP(usuario);
                     mostrarMenuInicio();
                 } else {
                     // If sign in fails, display a message to the user.

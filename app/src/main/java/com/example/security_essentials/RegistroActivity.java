@@ -3,7 +3,9 @@ package com.example.security_essentials;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -78,6 +80,14 @@ public class RegistroActivity extends AppCompatActivity {
         });
     }
 
+    private void guardarUsuarioSharedP(Usuario usuario){
+        SharedPreferences prefs = getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("email", usuario.email);
+        editor.putString("uid", usuario.uid);
+        editor.commit();
+    }
+
     public static SecretKey generateKey() throws NoSuchAlgorithmException, InvalidKeyException {
         return secret  = new SecretKeySpec(clave .getBytes(), "AES");
     }
@@ -109,9 +119,9 @@ public class RegistroActivity extends AppCompatActivity {
                     FirebaseUser user = mAuth.getCurrentUser();
                     Usuario usuario = new Usuario(user.getUid(), user.getEmail());
                     miRef.child("users").child(user.getUid()).setValue(usuario);
+                    guardarUsuarioSharedP(usuario);
                     Toast.makeText(RegistroActivity.this, "Registro exitoso.", Toast.LENGTH_SHORT).show();
                     mostrarMenuInicio();
-
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.getException());

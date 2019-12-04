@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MenuInicioActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
         LocationListener {
@@ -34,6 +37,8 @@ public class MenuInicioActivity extends AppCompatActivity implements GoogleApiCl
     FirebaseAuth auth;
     Button buttonRegresar;
     TextView textViewLocacion;
+    TextView textViewCorreo;
+    FirebaseUser currentUser;
 
     private static final String LOG_TAG = "MostrarMensajeMIA";
 
@@ -42,14 +47,19 @@ public class MenuInicioActivity extends AppCompatActivity implements GoogleApiCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_inicio);
         auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
         textViewLocacion = findViewById(R.id.textViewLocacion);
+        textViewCorreo = findViewById(R.id.textViewCorreo);
         locationRequest = new LocationRequest();
+
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
 
+        Usuario usuario = new Usuario(currentUser.getUid(), currentUser.getEmail());
+        mostrarUsuarioSharedP(usuario);
 
         buttonRegresar = findViewById(R.id.buttonRegresar);
         buttonRegresar.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +70,12 @@ public class MenuInicioActivity extends AppCompatActivity implements GoogleApiCl
         });
     }
 
+    private void mostrarUsuarioSharedP(Usuario usuario){
+        SharedPreferences prefs = getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE);
+        String email = prefs.getString("email", "");
+        textViewCorreo.setText(email);
+        String udi =  prefs.getString("uid", "");
+    }
 
     private void salir() {
         auth.signOut();
