@@ -1,69 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".registro">
+    android:orientation="vertical"
+    android:layout_margin="20dp"
+    android:gravity="center"
+    tools:context=".RegistroActivity">
 
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/correo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="144dp"
-        android:layout_marginEnd="96dp"
         android:ems="10"
+        android:hint="Correo"
         android:inputType="textPersonName"
-        android:text="usuario"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.97"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:layout_editor_absoluteX="82dp"
+        tools:layout_editor_absoluteY="109dp" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/contrasenia1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
         android:ems="10"
+        android:layout_marginTop="8dp"
+        android:hint="contraseña"
         android:inputType="textPersonName"
-        android:text="contraseña"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        tools:layout_editor_absoluteX="99dp"
+        tools:layout_editor_absoluteY="225dp" />
+
+    <EditText
+        android:id="@+id/contrasenia2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_marginTop="8dp"
+        android:hint="repetir contraseña"
+        android:inputType="textPersonName"
+        tools:layout_editor_absoluteX="99dp"
+        tools:layout_editor_absoluteY="306dp" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/registro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="login"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        android:layout_marginTop="8dp"
+        android:text="registro"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="391dp" />
 
-    <EditText
-        android:id="@+id/editText3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="repetir contraseña"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
 
     <Button
         android:id="@+id/atras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
         android:text="atras"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        tools:layout_editor_absoluteX="162dp"
+        tools:layout_editor_absoluteY="499dp" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
