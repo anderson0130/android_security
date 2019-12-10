@@ -5,6 +5,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 class Usuario {
 
+    public String nombre;
     public String uid;
     public String email;
 

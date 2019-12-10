@@ -25,12 +25,17 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.InvalidParameterException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.KeySpec;
+import java.util.Base64;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class RegistroActivity extends AppCompatActivity {
@@ -44,6 +49,9 @@ public class RegistroActivity extends AppCompatActivity {
     private static final String TAG = "MostrarMensajeRA";
     private FirebaseDatabase baseDatos;
     private DatabaseReference miRef;
+    static String keySecret="anderson12345678";
+    private static String salt = "ssshhhhhhhhhhh!!!!";
+    private DBHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +65,14 @@ public class RegistroActivity extends AppCompatActivity {
         baseDatos = FirebaseDatabase.getInstance();
         miRef = baseDatos.getReference();
 
+        databaseHelper = new DBHelper(this);
+
         Button registrar = (Button)findViewById(R.id.registro);
         registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)  {
                 if (clave1.getText().toString().equals(clave2.getText().toString())){
+
                     createUserWithEmailAndPassword(correo.getText().toString(), clave1.getText().toString());
                     //Toast.makeText(RegistroActivity.this,"c" +amparo,Toast.LENGTH_LONG).show();
                 } else {
@@ -118,6 +129,7 @@ public class RegistroActivity extends AppCompatActivity {
                     Log.d(TAG, "createUserWithEmail:success");
                     FirebaseUser user = mAuth.getCurrentUser();
                     Usuario usuario = new Usuario(user.getUid(), user.getEmail());
+                    databaseHelper.insert(usuario.nombre, usuario.email, usuario.uid, RegistroActivity.this);
                     miRef.child("users").child(user.getUid()).setValue(usuario);
                     guardarUsuarioSharedP(usuario);
                     Toast.makeText(RegistroActivity.this, "Registro exitoso.", Toast.LENGTH_SHORT).show();
@@ -133,6 +145,53 @@ public class RegistroActivity extends AppCompatActivity {
 
     private void mostrarMenuInicio(){
         startActivity(new Intent(this, MainActivity.class));
+    }
+
+    public static String encrypt(String strToEncrypt, String secret)
+    {
+        try
+        {
+            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            IvParameterSpec ivspec = new IvParameterSpec(iv);
+
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt.getBytes(), 65536, 256);
+            SecretKey tmp = factory.generateSecret(spec);
+            SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
+            return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
+
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error while encrypting: " + e.toString());
+        }
+        return null;
+    }
+
+
+
+    public static String decrypt(String strToDecrypt, String secret) {
+        try
+        {
+            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            IvParameterSpec ivspec = new IvParameterSpec(iv);
+
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            KeySpec spec = new PBEKeySpec(secret.toCharArray(), salt.getBytes(), 65536, 256);
+            SecretKey tmp = factory.generateSecret(spec);
+            SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
+            return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
+        }
+        catch (Exception e) {
+            System.out.println("Error while decrypting: " + e.toString());
+        }
+        return null;
     }
 }
 
